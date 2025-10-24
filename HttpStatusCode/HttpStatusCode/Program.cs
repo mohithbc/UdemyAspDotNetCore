@@ -5,11 +5,11 @@ app.Run(async (HttpContext context) =>
     {
         if (1 == 1)
         {
-            context.Response.StatusCode = StatusCodes.Status200OK;
+            context.Response.StatusCode = 200;
         }
         else
         {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.StatusCode = 400;
         }
         await context.Response.WriteAsync("Hello");
         await context.Response.WriteAsync("World!");
