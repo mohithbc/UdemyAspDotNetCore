@@ -23,21 +23,25 @@ var app = builder.Build();
 
 //middlware 1
 app.Use(async (HttpContext context,RequestDelegate next) => {
-await context.Response.WriteAsync("Hello ");
-await next(context);
+    await context.Response.WriteAsync("Hello \n");
+    await next(context);
 });
 
 //middleware 2
 app.Use(async (context, next) => {
-    await context.Response.WriteAsync("Hello again ");
+    await context.Response.WriteAsync("Hello again \n");
     await next(context);
 });
 
-app.UseMiddleware<MyCustomMiddleware>();// use custom middleware
+// app.UseMiddleware<MyCustomMiddleware>();// use custom middleware
+// or use the extension method
+
+app.UseMyCustomMiddleware();// use custom middleware via extension method
 
 //middleware 3
 app.Run(async (HttpContext context) => {
-    await context.Response.WriteAsync("Goodbye!");
+    await context.Response.WriteAsync("Goodbye!\n");
 });
+
 
 app.Run();
