@@ -36,7 +36,9 @@ app.Use(async (context, next) => {
 // app.UseMiddleware<MyCustomMiddleware>();// use custom middleware
 // or use the extension method
 
-app.UseMyCustomMiddleware();// use custom middleware via extension method
+//app.UseMyCustomMiddleware();// use custom middleware via extension method
+
+app.UseHelloCustomMiddleware();// use another custom middleware via extension method    
 
 //middleware 3
 app.Run(async (HttpContext context) => {
