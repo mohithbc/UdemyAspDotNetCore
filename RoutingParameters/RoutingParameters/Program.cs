@@ -1,4 +1,12 @@
+using RoutingParameters.CustomConstraints;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap.Add("months", typeof(MonthsCustomConstraints));
+});
+
 var app = builder.Build();
 
 //Routing is automatically enabled.
@@ -55,7 +63,24 @@ app.Map("cities/{cityid:guid}", async (context) =>
 
 
 //Eg: sales-report/2030/apr
-app.Map("sales-report/{year:int:min(1900)}/{month:regex(^(apr|jul|oct|jan)$)}", async context =>
+//app.Map("sales-report/{year:int:min(1900)}/{month:regex(^(apr|jul|oct|jan)$)}", async context =>
+//{
+//    int year = Convert.ToInt32(context.Request.RouteValues["year"]);
+//    string? month = Convert.ToString(context.Request.RouteValues["month"]);
+
+//    if (month == "apr" || month == "jul" || month == "oct" || month == "jan")
+//    {
+//        await context.Response.WriteAsync($"sales report - {year} - {month}");
+//    }
+//    else
+//    {
+//        await context.Response.WriteAsync($"{month} month is not allowed for sales report");
+//    }
+//});
+
+// Eg: sales-report/2030/apr using custom constraint
+
+app.Map("sales-report/{year:int:min(1900)}/{month:months}", async context =>
 {
     int year = Convert.ToInt32(context.Request.RouteValues["year"]);
     string? month = Convert.ToString(context.Request.RouteValues["month"]);
@@ -68,6 +93,13 @@ app.Map("sales-report/{year:int:min(1900)}/{month:regex(^(apr|jul|oct|jan)$)}", 
     {
         await context.Response.WriteAsync($"{month} month is not allowed for sales report");
     }
+});
+
+// Eg: sales-report/2024/jan
+// Endpoint selection order will hit this endpoint first as its more specific than the above sales report endpoint
+app.Map("sales-report/2024/jan",async context =>
+{
+    await context.Response.WriteAsync($"sales report - 2024 - jan");
 });
 
 
